@@ -1,0 +1,72 @@
+PRIMERA FORMA NORMAL 1FN
+
+Estudiantes ID   NombreEstudiante Curso1  Curso2 Curso3
+
+1                    Pablo         Mate    Hist Biología 
+
+-______________________________________
+
+EstudianteID   NombreEstudiante Curso
+
+1               Pablo            Mate
+1               Pablo            Historia
+
+
+
+Tabla Estudiantes 
+
+EstudianteID    NombreEstudiante
+1                Pablo 
+2		 Ana
+3                Carlos 
+
+
+Tabla Cursos 
+
+
+EstudianteID      Curso
+1		  Matematica
+2                 Historia 
+
+
+EJERCICIO-- ARMAR UNA BASE DE DATOS CON LA SIG ESTRUCTURA-----
+
+______________________________________________________
+
+Tabla Estudiantes
+
+EstudianteID PK     Nombre Estudiante 
+
+
+______________________________________________________
+
+Tabla Cursos 
+
+CursoID PK   Desc_curso  
+
+________________________________________________
+
+Tabla Profesores 
+
+ProfesorID PK          Profesor
+
+
+___________________________________________________ 
+
+
+Tabla Aula 
+
+
+AulaID   CursoID    ProfesorID  EstudianteID
+
+1          1       1			1
+
+___________________________________________________
+
+
+
+
+
+
+
+ 
