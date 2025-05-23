@@ -1,0 +1,126 @@
+-- ====================================
+-- BASE DE DATOS: CONTROL DE STOCK
+-- ====================================
+
+
+DROP TABLE IF EXISTS Salidas;
+DROP TABLE IF EXISTS Entradas;
+DROP TABLE IF EXISTS Productos;
+DROP TABLE IF EXISTS Categorias;
+DROP TABLE IF EXISTS Proveedores;
+
+-- =======================
+-- TABLA: Categorías
+-- =======================
+CREATE TABLE Categorias (
+    id_categoria INT PRIMARY KEY,
+    nombre_categoria VARCHAR(100) NOT NULL
+);
+
+-- =======================
+-- TABLA: Proveedores
+-- =======================
+CREATE TABLE Proveedores (
+    id_proveedor INT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    contacto VARCHAR(100)
+);
+
+-- =======================
+-- TABLA: Productos
+-- =======================
+CREATE TABLE Productos (
+    id_producto INT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    descripcion TEXT,
+    id_categoria INT,
+    FOREIGN KEY (id_categoria) REFERENCES Categorias(id_categoria)
+);
+
+-- =======================
+-- TABLA: Entradas (Stock IN)
+-- =======================
+CREATE TABLE Entradas (
+    id_entrada INT PRIMARY KEY,
+    id_producto INT,
+    fecha_entrada DATE NOT NULL,
+    cantidad INT NOT NULL,
+    id_proveedor INT,
+    FOREIGN KEY (id_producto) REFERENCES Productos(id_producto),
+    FOREIGN KEY (id_proveedor) REFERENCES Proveedores(id_proveedor)
+);
+
+-- =======================
+-- TABLA: Salidas (Stock OUT)
+-- =======================
+CREATE TABLE Salidas (
+    id_salida INT PRIMARY KEY,
+    id_producto INT,
+    fecha_salida DATE NOT NULL,
+    cantidad INT NOT NULL,
+    destino VARCHAR(100),
+    FOREIGN KEY (id_producto) REFERENCES Productos(id_producto)
+);
+
+-- =======================
+-- INSERTAR DATOS
+-- =======================
+
+-- Categorías
+INSERT INTO Categorias (id_categoria, nombre_categoria) VALUES
+(1, 'Electrónica'),
+(2, 'Papelería'),
+(3, 'Ferretería');
+
+-- Proveedores
+INSERT INTO Proveedores (id_proveedor, nombre, contacto) VALUES
+(201, 'TechSupplier S.A.', 'tech@proveedores.com'),
+(202, 'Papelería Central', 'ventas@papel.com'),
+(203, 'Todo Ferretería', 'contacto@ferre.com');
+
+-- Productos
+INSERT INTO Productos (id_producto, nombre, descripcion, id_categoria) VALUES
+(101, 'Mouse inalámbrico', 'Mouse óptico con conexión USB', 1),
+(102, 'Teclado mecánico', 'Teclado retroiluminado para juegos', 1),
+(103, 'Cuaderno A4', '100 hojas, rayado', 2),
+(104, 'Tornillo 1/2"', 'Acero inoxidable, caja de 100 uds.', 3);
+
+-- Entradas
+INSERT INTO Entradas (id_entrada, id_producto, fecha_entrada, cantidad, id_proveedor) VALUES
+(301, 101, '2025-05-01', 50, 201),
+(302, 102, '2025-05-02', 30, 201),
+(303, 103, '2025-05-03', 100, 202),
+(304, 104, '2025-05-03', 200, 203);
+
+-- Salidas
+INSERT INTO Salidas (id_salida, id_producto, fecha_salida, cantidad, destino) VALUES
+(401, 101, '2025-05-05', 5, 'Oficina Central'),
+(402, 103, '2025-05-06', 20, 'Sucursal Norte'),
+(403, 104, '2025-05-07', 50, 'Proyecto Construcción X');
+
+-- =======================
+-- CONSULTA DE STOCK ACTUAL 
+-- =======================
+
+-- Sumar entradas por producto
+CREATE VIEW TotalEntradas AS
+SELECT id_producto, SUM(cantidad) AS total_entradas
+FROM Entradas
+GROUP BY id_producto;
+
+-- Sumar salidas por producto
+CREATE VIEW TotalSalidas AS
+SELECT id_producto, SUM(cantidad) AS total_salidas
+FROM Salidas
+GROUP BY id_producto;
+
+-- Stock actual: entradas - salidas
+SELECT
+  p.id_producto,
+  p.nombre,
+  te.total_entradas,
+  ts.total_salidas,
+  (COALESCE(te.total_entradas, 0) - COALESCE(ts.total_salidas, 0)) AS stock_actual
+FROM Productos p
+LEFT JOIN TotalEntradas te ON p.id_producto = te.id_producto
+LEFT JOIN TotalSalidas ts ON p.id_producto = ts.id_producto;
