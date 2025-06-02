@@ -1,0 +1,97 @@
+List<int> numeros = new List<int>();
+numeros.Add(1);
+numeros.Add(2);
+numeros.Add(3);
+numeros.Add(4);
+
+for(int numero=0; numero<numeros.Count(); numero++)
+{
+    Console.WriteLine(numero);
+}
+
+List<string> nombres = new List<string>() { "uvas", "manzanas", "bananas" };
+
+nombres.Sort();
+foreach (string nombre in nombres)
+{
+    Console.WriteLine(nombre);
+}
+//nombres.Remove("uvas");
+//nombres.RemoveAt(2);
+bool contieneperas = nombres.Contains("peras");
+if (contieneperas)
+{
+    Console.WriteLine("La pera existe en mi lista");
+}
+else {
+    Console.WriteLine("La pera no existe en mi lista");
+}
+    foreach (string nombre in nombres)
+    {
+        Console.WriteLine(nombre);
+    }
+
+
+Dictionary <int, string> empleados = new Dictionary<int, string>();
+empleados.Add(1, "Juan Perez");
+empleados.Add(2, "Mario Gomez");
+empleados[3] = "Ana Juarez";
+empleados.Remove(2);
+foreach (var empleado in empleados) {
+    Console.WriteLine(empleado);
+}
+
+bool existeEmpleado = empleados.ContainsKey(2);
+if (!existeEmpleado)
+{
+    Console.WriteLine("empleado despedido");
+}
+else {
+    Console.WriteLine("empleado vigente");
+}
+
+HashSet<string> paises = new HashSet<string>();
+paises.Add("Argentina");
+paises.Add("Brasil");
+paises.Add("Chile");
+paises.Add("Brasil");
+
+foreach (var pais in paises) {
+    Console.WriteLine(pais);
+}
+
+
+Queue<string> cola = new Queue<string>();
+cola.Enqueue("Cliente 1");
+cola.Enqueue("Cliente 2");
+cola.Enqueue("Cliente 3");
+string atendido = cola.Dequeue();
+string proximo = cola.Peek();
+
+foreach (string cliente in cola) {
+    Console.WriteLine(cliente);
+    
+}
+Console.WriteLine("---------");
+Console.WriteLine("Este fue atendido " + atendido);
+Console.WriteLine("---------");
+Console.WriteLine("Este es el próximo " + proximo);
+
+Stack<string> pila = new Stack<string>();
+pila.Push("Empleado 1");
+pila.Push("Empleado 2");
+pila.Push("Empleado 3");
+string arriba = pila.Pop();
+string actual = pila.Peek();
+foreach (string p in pila) {
+    Console.WriteLine(p);
+}
+Console.WriteLine("--------------");
+Console.WriteLine("El empleado que se fue es: " + arriba);
+Console.WriteLine("--------------");
+Console.WriteLine("El próximo empleado que se va a ir es: " + actual);
+
+
+
+
+
