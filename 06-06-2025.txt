@@ -1,0 +1,113 @@
+-- 1. Crear base de datos
+DROP DATABASE IF EXISTS TiendaEjemplo;
+CREATE DATABASE TiendaEjemplo;
+USE TiendaEjemplo;
+
+-- 2. Crear tablas
+
+-- Tabla de clientes
+CREATE TABLE Clientes (
+    id_cliente INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100),
+    ciudad VARCHAR(50)
+);
+
+-- Tabla de pedidos
+CREATE TABLE Pedidos (
+    id_pedido INT PRIMARY KEY AUTO_INCREMENT,
+    id_cliente INT,
+    total DECIMAL(10,2),
+    fecha DATE,
+    FOREIGN KEY (id_cliente) REFERENCES Clientes(id_cliente)
+);
+
+-- Tabla de productos
+CREATE TABLE Productos (
+    id_producto INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100),
+    precio DECIMAL(10,2)
+);
+
+-- Tabla de ventas
+CREATE TABLE Ventas (
+    id_venta INT PRIMARY KEY AUTO_INCREMENT,
+    id_producto INT,
+    cantidad INT,
+    fecha DATE,
+    FOREIGN KEY (id_producto) REFERENCES Productos(id_producto)
+);
+
+-- 3. Insertar datos
+
+-- Clientes
+INSERT INTO Clientes (nombre, ciudad) VALUES
+('Ana Gómez', 'Madrid'),
+('Luis Pérez', 'Barcelona'),
+('Carla Ruiz', 'Madrid'),
+('Pedro Torres', 'Valencia'),
+('Lucía Fernández', 'Sevilla');
+
+-- Pedidos
+INSERT INTO Pedidos (id_cliente, total, fecha) VALUES
+(1, 250.00, '2025-05-01'),
+(2, 180.00, '2025-05-02'),
+(1, 90.00, '2025-05-03'),
+(3, 300.00, '2025-05-04');
+
+-- Productos
+INSERT INTO Productos (nombre, precio) VALUES
+('Televisor', 400.00),
+('Smartphone', 600.00),
+('Pantalón', 30.00),
+('Lámpara', 25.00),
+('Silla', 45.00);
+
+-- Ventas
+INSERT INTO Ventas (id_producto, cantidad, fecha) VALUES
+(1, 2, '2025-05-01'),  -- Televisor
+(2, 1, '2025-05-02'),  -- Smartphone
+(3, 5, '2025-05-03');  -- Pantalón
+
+-- 4. SUBCONSULTAS
+
+-- 1️⃣ Clientes que han hecho pedidos mayores a 200 
+SELECT nombre AS Cliente
+FROM Clientes
+WHERE id_cliente IN (
+    SELECT id_cliente
+    FROM Pedidos
+    WHERE total > 200
+);
+
+--  Clientes que NO han hecho ningún pedido
+SELECT nombre AS ClienteSinPedidos
+FROM Clientes
+WHERE id_cliente NOT IN (
+    SELECT DISTINCT id_cliente
+    FROM Pedidos
+);
+
+--  Productos que han sido vendidos al menos una vez
+SELECT nombre AS ProductoVendido
+FROM Productos
+WHERE id_producto IN (
+    SELECT id_producto
+    FROM Ventas
+);
+
+--  Productos más caros que el precio promedio
+SELECT nombre AS ProductoCaro, precio
+FROM Productos
+WHERE precio > (
+    SELECT AVG(precio)
+    FROM Productos
+);
+
+--  Clientes que hicieron pedidos en mayo de 2025
+SELECT nombre AS ClienteMayo2025
+FROM Clientes
+WHERE id_cliente IN (
+    SELECT id_cliente
+    FROM Pedidos
+    WHERE fecha BETWEEN '2025-05-01' AND '2025-05-31'
+);
